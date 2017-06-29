@@ -1,0 +1,34 @@
+{
+  "name": "RealtimeBoard",
+  "identifier" : "com.realtimeboard.sketch.plugin",
+  "version" : "1.0.0",
+  "description" : "Export and sync your artboards with RealtimeBoard",
+  "authorEmail" : "support@realtimeboard.com",
+  "author" : "RealtimeBoard",
+  "commands" : [
+  {
+    "script" : "auth.js",
+    "name" : "Log into RealtimeBoard, Log out of RealtimeBoard",
+    "identifier" : "auth"
+  },
+  {
+    "script" : "syncAll.js",
+    "shortcut" : "command alt e",
+    "name" : "Sync all artboards with RealtimeBoard",
+    "identifier" : "syncAll"
+  },
+  {
+    "script" : "syncSelected.js",
+    "shortcut" : "command alt shift e",
+    "name" : "Sync only selected artboards with RealtimeBoard",
+    "identifier" : "syncSelected"
+  }],
+  "menu": {
+    "title": "RealtimeBoard",
+    "items": [
+      "syncAll",
+      "syncSelected",
+      "auth"
+    ]
+  }
+}
