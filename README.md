@@ -4,7 +4,7 @@ Add, share and discuss your Sketch artboards with the team in RealtimeBoard. The
 
 # Installation
 
-Download and extract the contents of this zip file. Then double-click the RealtimeBoard.sketchplugin bundle to install the plugin. This will only work if you are using Sketch 3.3 or later.
+Download and extract the contents of this zip file. Then double-click the RealtimeBoard.sketchplugin bundle to install the plugin.
 
 # Usage
 
