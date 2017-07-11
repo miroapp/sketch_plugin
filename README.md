@@ -17,4 +17,4 @@ Download and extract the contents of this zip file. Then double-click the Realti
 
 # Usage
 
-Everything is explained in [this quick tutorial](https://help.realtimeboard.com/support/solutions/articles/11000033924-sketch-plugin/)
+Everything is explained in [this quick tutorial](https://help.realtimeboard.com/support/solutions/articles/11000033924-sketch-plugin/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin)
