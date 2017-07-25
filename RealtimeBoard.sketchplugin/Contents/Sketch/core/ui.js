@@ -119,9 +119,9 @@ function UI() {
     var app = [NSApplication sharedApplication];
 
     var loginWindow = [[NSWindow alloc] init];
-    [loginWindow setFrame:NSMakeRect(0, 0, 410, 310) display: false];
+    [loginWindow setFrame:NSMakeRect(0, 0, 410, 320) display: false];
 
-    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 230, 410, 60)];
+    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 240, 410, 60)];
     [headerView setWantsLayer:true];
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[loginWindow contentView] addSubview:headerView];
@@ -137,20 +137,20 @@ function UI() {
 
     [[loginWindow contentView] addSubview:headerView];
 
-    var errorMessageLabel = createLabel("The username or password you entered is incorrect.", 13, true, NSMakeRect(45, 180, 320, 25));
+    var errorMessageLabel = createLabel("The username or password you entered is incorrect.", 13, true, NSMakeRect(45, 200, 320, 25));
     [errorMessageLabel setTextColor:[NSColor redColor]];
     [[loginWindow contentView] addSubview:errorMessageLabel];
 
-    var emailLabel = createLabel("Email", 13, false, NSMakeRect(45, 155, 260, 25));
+    var emailLabel = createLabel("Email", 13, false, NSMakeRect(45, 175, 260, 25));
     [[loginWindow contentView] addSubview:emailLabel];
 
-    var emailField = createInput("Email", false, NSMakeRect(47, 135, 315, 25));
+    var emailField = createInput("Email", false, NSMakeRect(47, 155, 315, 25));
     [[loginWindow contentView] addSubview:emailField];
 
-    var passwordLabel = createLabel("Password", 13, false, NSMakeRect(45, 95, 260, 25));
+    var passwordLabel = createLabel("Password", 13, false, NSMakeRect(45, 115, 260, 25));
     [[loginWindow contentView] addSubview:passwordLabel];
 
-    var passwordField = createInput("Password", true, NSMakeRect(47, 75, 315, 25));
+    var passwordField = createInput("Password", true, NSMakeRect(47, 95, 315, 25));
     [[loginWindow contentView] addSubview:passwordField];
 
     COScript.currentCOScript().setShouldKeepAround_(true);
@@ -181,6 +181,30 @@ function UI() {
 
     passwordField.setDelegate(passwordDelegate.getClassInstance());
 
+    function endSheet() {
+      [loginWindow orderOut:nil];
+      [[app mainWindow] endSheet: loginWindow];
+      [cancelButton setCOSJSTargetFunction:undefined];
+      [loginButton setCOSJSTargetFunction:undefined];
+      [ssoButton setCOSJSTargetFunction:undefined]
+      COScript.currentCOScript().setShouldKeepAround_(false);
+    }
+
+    var title = "Use Company credentials (SSO)";
+    var ssoButton = createButton(title, true, NSMakeRect(45, 45, 190, 40));
+    var color = [NSColor colorWithCalibratedRed:99.0/255.0 green:150.0/255.0 blue:1.0 alpha:1.0]
+    var colorTitle = [[ssoButton attributedTitle] mutableCopy];
+
+    [colorTitle addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, title.length)];
+    [colorTitle addAttribute:NSUnderlineStyleAttributeName value:NSUnderlineStyleSingle range:NSMakeRange(0, title.length)];
+    [ssoButton setAttributedTitle:colorTitle];
+    [ssoButton setBordered:false];
+
+    [ssoButton setCOSJSTargetFunction:function(sender) {
+      endSheet();
+      _this.showSSOWebView(context);
+    }]
+
     var _this = this;
 
     var loginButton = createButton("Login", false, NSMakeRect(268, 8, 100, 30));
@@ -203,32 +227,24 @@ function UI() {
         } else {
           var token = response.token;
           api.setToken(token);
-
-          [loginWindow orderOut:nil];
-          [[app mainWindow] endSheet: loginWindow];
-          [cancelButton setCOSJSTargetFunction:undefined];
-          [loginButton setCOSJSTargetFunction:undefined];
-          COScript.currentCOScript().setShouldKeepAround_(false);
-
+          endSheet();
           _this.showExportWindow(context);
         }
       }
     }];
 
     var cancelButton = createButton("Cancel", true, NSMakeRect(167, 8, 100, 30));
+    [cancelButton setKeyEquivalent:@"\033"]
     [cancelButton setCOSJSTargetFunction:function(sender) {
-      [loginWindow orderOut:nil];
-      [[app mainWindow] endSheet: loginWindow];
-      [cancelButton setCOSJSTargetFunction:undefined];
-      [loginButton setCOSJSTargetFunction:undefined];
-      COScript.currentCOScript().setShouldKeepAround_(false);
+      endSheet();
     }];
 
-    var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 50)];
+    var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 80)];
     [bottomActionsView setWantsLayer:true];
 
     [[loginWindow contentView] addSubview:bottomActionsView];
 
+    [bottomActionsView addSubview:ssoButton];
     [bottomActionsView addSubview:cancelButton];
     [bottomActionsView addSubview:loginButton];
 
@@ -260,7 +276,7 @@ function UI() {
     [[logoutWindow contentView] addSubview:headerView];
 
     var logoutButton = createButton("Logout", true, NSMakeRect(255, 8, 100, 30));
-    [logoutButton setKeyEquivalent:"\r"];
+    [logoutButton setKeyEquivalent:"\r"]
     [logoutButton setCOSJSTargetFunction:function(sender) {
       var errorHandlingInfo = {};
       api.logoutRequest(context, errorHandlingInfo);
@@ -277,6 +293,7 @@ function UI() {
     }];
 
     var cancelButton = createButton("Cancel", true, NSMakeRect(152, 8, 100, 30));
+    [cancelButton setKeyEquivalent:@"\033"]
     [cancelButton setCOSJSTargetFunction:function(sender) {
       [logoutWindow orderOut:nil];
       [[app mainWindow] endSheet: logoutWindow];
@@ -294,6 +311,85 @@ function UI() {
     [bottomActionsView addSubview:cancelButton];
 
     [[app mainWindow] beginSheet:logoutWindow completionHandler:nil];
+  }
+
+  UI.prototype.showSSOWebView = function(context) {
+    COScript.currentCOScript().setShouldKeepAround_(true);
+
+    var delegate = new MochaJSDelegate();
+    var cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+    var _this = this;
+
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+
+      if ([cookie domain] == 'realtimeboard.com') {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+      }
+    }
+
+    var webviewWindow = [[NSWindow alloc] init];
+  	[webviewWindow setFrame:NSMakeRect(0, 0, 500, 420) display:false];
+
+    var frame = NSMakeRect(0,60,500,340);
+    var stringURL = [NSString stringWithFormat:ssoURL];
+    var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    var url = [NSURL URLWithString:webStringURL];
+    var webView = [[WebView alloc] initWithFrame:frame];
+
+    [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
+    [[webviewWindow contentView] addSubview:webView];
+    [webviewWindow center];
+
+    delegate.setHandlerForSelector("webView:resource:didReceiveResponse:fromDataSource:", function(webView, resource, didReceiveResponse, fromDataSource) {
+      var isApp = appURL == [webView mainFrameURL]
+
+      if (isApp) {
+        COScript.currentCOScript().setShouldKeepAround_(false);
+
+        var cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+
+          if ([cookie domain] == 'realtimeboard.com') {
+            if ([cookie name] == 'token') {
+              api.setToken([cookie value]);
+              break;
+            }
+          }
+        }
+
+        webView.stopLoading(nil);
+        [webView close];
+        [webviewWindow orderOut:nil];
+    		[NSApp stopModal];
+
+        _this.showExportWindow(context, false);
+      }
+    });
+
+    webView.setFrameLoadDelegate_(delegate.getClassInstance());
+    webView.setResourceLoadDelegate_(delegate.getClassInstance());
+
+  	var cancelButton = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
+  	[cancelButton setTitle:"Cancel"]
+  	[cancelButton setBezelStyle:NSRoundedBezelStyle]
+  	[cancelButton sizeToFit]
+  	[cancelButton setFrame:NSMakeRect(380, 14, 100, 30)]
+  	[cancelButton setKeyEquivalent:@"\033"]
+  	[cancelButton setCOSJSTargetFunction:function(sender) {
+      [webView close];
+  		[webviewWindow orderOut:nil];
+  		[NSApp stopModal];
+  	}]
+
+    [[webviewWindow contentView] addSubview:cancelButton];
+
+  	[NSApp runModalForWindow:webviewWindow];
+
+    webviewWindow = nil;
+    cancelButton = nil;
   }
 
   UI.prototype.showExportWindow = function(context, syncSelected) {
@@ -382,6 +478,7 @@ function UI() {
       [app stopModal];
       COScript.currentCOScript().setShouldKeepAround_(false);
     }];
+    [cancelButton setKeyEquivalent:@"\033"]
     [cancelButton setAction:"callAction:"];
 
     var syncButton = createButton("Sync", true, NSMakeRect(330, 20, 100, 30));

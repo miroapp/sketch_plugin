@@ -25,7 +25,9 @@ SOFTWARE.
 var api = new Api();
 var siteURL = "https://realtimeboard.com/";
 var path = siteURL + "api/v1/";
-var boardURL = siteURL + "app/board/";
+var appURL = siteURL + "app/";
+var boardURL = appURL + "board/";
+var ssoURL = siteURL + "sso/login/?sketch=1";
 var exportPath = NSTemporaryDirectory() + "sketch-rtb-export/";
 
 function dealWithErrors(context, message) {
