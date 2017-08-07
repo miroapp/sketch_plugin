@@ -286,6 +286,8 @@ function Api() {
     for (var i = 0; i < exportInfoList.length; i++) {
       var artboard = exportInfoList[i].artboard;
       var resourceId = context.command.valueForKey_onLayer_forPluginIdentifier(boardId, artboard, "rtb_sync");
+      var originalId = context.command.valueForKey_onLayer_forPluginIdentifier("originalId", artboard, "rtb_sync");
+      var objectId = [artboard objectID];
       var absoluteInfluenceRect = [artboard absoluteInfluenceRect];
       var xPos = absoluteInfluenceRect.origin.x;
       var yPos = absoluteInfluenceRect.origin.y;
@@ -295,10 +297,18 @@ function Api() {
       var centralYPos = height / 2 + yPos;
       var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
 
-      if (resourceId) {
+      if (resourceId != nil && (originalId == nil || originalId == objectId)) {
         dataArray.push(makeDataString(transformationData, resourceId));
       } else {
         dataArray.push(makeDataString(transformationData));
+      }
+
+      if (originalId != objectId) {
+        if (resourceId != nil) {
+          context.command.setValue_forKey_onLayer_forPluginIdentifier(nil, boardId, artboard, "rtb_sync");
+        }
+
+        context.command.setValue_forKey_onLayer_forPluginIdentifier(objectId, "originalId", artboard, "rtb_sync");
       }
     }
 
