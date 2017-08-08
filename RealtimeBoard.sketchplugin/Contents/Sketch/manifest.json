@@ -1,10 +1,11 @@
 {
   "name": "RealtimeBoard",
   "identifier" : "com.realtimeboard.sketch.plugin",
-  "version" : "1.1.1",
+  "version" : "1.2.0",
   "description" : "Export and sync your artboards with RealtimeBoard",
   "authorEmail" : "support@realtimeboard.com",
   "author" : "RealtimeBoard",
+  "appcast": "https://raw.githubusercontent.com/RealtimeBoard/sketch_plugin/master/appcast.xml",
   "commands" : [
   {
     "script" : "auth.js",
