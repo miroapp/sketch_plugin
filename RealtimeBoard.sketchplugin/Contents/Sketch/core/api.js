@@ -28,6 +28,7 @@ var path = siteURL + "api/v1/";
 var appURL = siteURL + "app/";
 var boardURL = appURL + "board/";
 var ssoURL = siteURL + "sso/login/?sketch=1";
+var googleOAuthURL = "https://accounts.google.com/Logout?continue=https://accounts.google.com/o/oauth2/auth?access_type%3Doffline%26response_type%3Dcode%26client_id%3D1062019541050-8mvc17gv9c3ces694hq5k1h6uqio1cfn.apps.googleusercontent.com%26scope%3Dprofile%2520email%26include_granted_scopes%3Dtrue%26redirect_uri%3Dhttps%3A%2F%2Frealtimeboard.com%2Fsocial%2Fgoogle%2F";
 var exportPath = NSTemporaryDirectory() + "sketch-rtb-export/";
 
 function dealWithErrors(context, message) {
@@ -161,6 +162,15 @@ function Api() {
       var data = { token: token };
       result = this.request(context, url, "POST", data, errorHandlingInfo);
     }
+
+    return result;
+  }
+
+  Api.prototype.SSOAuth = function(context, email) {
+    var result = false;
+    var url = "sso/saml/info?email=" + email;
+
+    result = this.request(context, url, "GET");
 
     return result;
   }
@@ -315,7 +325,6 @@ function Api() {
     dataString = dataArray.join(', ');
 
     var graphicsPluginRequest = 'GraphicsPluginRequest={"data":[' + dataString + ']};type=application/json ';
-    log(graphicsPluginRequest);
     var args = [[NSMutableArray alloc] init];
 
     args.addObject("-v");

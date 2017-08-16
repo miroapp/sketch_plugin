@@ -119,9 +119,9 @@ function UI() {
     var app = [NSApplication sharedApplication];
 
     var loginWindow = [[NSWindow alloc] init];
-    [loginWindow setFrame:NSMakeRect(0, 0, 410, 320) display: false];
+    [loginWindow setFrame:NSMakeRect(0, 0, 410, 350) display: false];
 
-    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 240, 410, 60)];
+    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 270, 410, 60)];
     [headerView setWantsLayer:true];
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[loginWindow contentView] addSubview:headerView];
@@ -137,20 +137,20 @@ function UI() {
 
     [[loginWindow contentView] addSubview:headerView];
 
-    var errorMessageLabel = createLabel("The username or password you entered is incorrect.", 13, true, NSMakeRect(45, 200, 320, 25));
+    var errorMessageLabel = createLabel("The username or password you entered is incorrect.", 13, true, NSMakeRect(45, 230, 320, 25));
     [errorMessageLabel setTextColor:[NSColor redColor]];
     [[loginWindow contentView] addSubview:errorMessageLabel];
 
-    var emailLabel = createLabel("Email", 13, false, NSMakeRect(45, 175, 260, 25));
+    var emailLabel = createLabel("Email", 13, false, NSMakeRect(45, 205, 260, 25));
     [[loginWindow contentView] addSubview:emailLabel];
 
-    var emailField = createInput("Email", false, NSMakeRect(47, 155, 315, 25));
+    var emailField = createInput("Email", false, NSMakeRect(47, 185, 315, 25));
     [[loginWindow contentView] addSubview:emailField];
 
-    var passwordLabel = createLabel("Password", 13, false, NSMakeRect(45, 115, 260, 25));
+    var passwordLabel = createLabel("Password", 13, false, NSMakeRect(45, 145, 260, 25));
     [[loginWindow contentView] addSubview:passwordLabel];
 
-    var passwordField = createInput("Password", true, NSMakeRect(47, 95, 315, 25));
+    var passwordField = createInput("Password", true, NSMakeRect(47, 125, 315, 25));
     [[loginWindow contentView] addSubview:passwordField];
 
     COScript.currentCOScript().setShouldKeepAround_(true);
@@ -190,8 +190,10 @@ function UI() {
       COScript.currentCOScript().setShouldKeepAround_(false);
     }
 
+    var _this = this;
+
     var title = "Use Company credentials (SSO)";
-    var ssoButton = createButton(title, true, NSMakeRect(45, 45, 190, 40));
+    var ssoButton = createButton(title, true, NSMakeRect(45, 75, 190, 40));
     var color = [NSColor colorWithCalibratedRed:99.0/255.0 green:150.0/255.0 blue:1.0 alpha:1.0]
     var colorTitle = [[ssoButton attributedTitle] mutableCopy];
 
@@ -202,10 +204,23 @@ function UI() {
 
     [ssoButton setCOSJSTargetFunction:function(sender) {
       endSheet();
-      _this.showSSOWebView(context);
+      _this.showSSOLoginWindow(context);
     }]
 
-    var _this = this;
+    title = "Use Google account";
+    var googleButton = createButton(title, true, NSMakeRect(45, 45, 124, 40));
+    color = [NSColor colorWithCalibratedRed:99.0/255.0 green:150.0/255.0 blue:1.0 alpha:1.0]
+    colorTitle = [[googleButton attributedTitle] mutableCopy];
+
+    [colorTitle addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, title.length)];
+    [colorTitle addAttribute:NSUnderlineStyleAttributeName value:NSUnderlineStyleSingle range:NSMakeRange(0, title.length)];
+    [googleButton setAttributedTitle:colorTitle];
+    [googleButton setBordered:false];
+
+    [googleButton setCOSJSTargetFunction:function(sender) {
+      endSheet();
+      _this.showWebView(context, googleOAuthURL);
+    }]
 
     var loginButton = createButton("Login", false, NSMakeRect(268, 8, 100, 30));
     [loginButton setKeyEquivalent:"\r"];
@@ -239,12 +254,111 @@ function UI() {
       endSheet();
     }];
 
-    var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 80)];
+    var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 110)];
     [bottomActionsView setWantsLayer:true];
 
     [[loginWindow contentView] addSubview:bottomActionsView];
 
     [bottomActionsView addSubview:ssoButton];
+    [bottomActionsView addSubview:googleButton];
+    [bottomActionsView addSubview:cancelButton];
+    [bottomActionsView addSubview:loginButton];
+
+    [[app mainWindow] beginSheet:loginWindow completionHandler:nil];
+  }
+
+  UI.prototype.showSSOLoginWindow = function(context) {
+    var app = [NSApplication sharedApplication];
+
+    var loginWindow = [[NSWindow alloc] init];
+    [loginWindow setFrame:NSMakeRect(0, 0, 410, 320) display: false];
+
+    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 240, 410, 60)];
+    [headerView setWantsLayer:true];
+    [headerView setBackgroundColor:[NSColor whiteColor]];
+    [[loginWindow contentView] addSubview:headerView];
+
+    var titleField = createLabel("Single Sign On", 15, false, NSMakeRect(45, 15, 250, 25));
+    [titleField setFont:[NSFont boldSystemFontOfSize:14]];
+    [headerView addSubview:titleField];
+
+    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(305, 5, 60, 60)],
+    icon = getLogoImage(context);
+    [imageView setImage: icon];
+    [headerView addSubview:imageView];
+
+    [[loginWindow contentView] addSubview:headerView];
+
+    var messageLabel = createLabel("Your organization uses Single Sign On (SSO) with RealtimeBoard. Please log in using your SSO credentials.",
+     12, false, NSMakeRect(45, 125, 345, 75));
+
+    messageLabel.usesSingleLineMode = false
+    messageLabel.cell.wraps = true
+    messageLabel.cell.scrollable = false
+
+    [[loginWindow contentView] addSubview:messageLabel];
+
+    var emailLabel = createLabel("Work email", 13, false, NSMakeRect(45, 115, 260, 25));
+    [[loginWindow contentView] addSubview:emailLabel];
+
+    var emailField = createInput("Work email", false, NSMakeRect(47, 95, 315, 25));
+    [[loginWindow contentView] addSubview:emailField];
+
+    var _this = this;
+
+    COScript.currentCOScript().setShouldKeepAround_(true);
+
+    var emailDelegate = new MochaJSDelegate({
+      "controlTextDidChange:": (function(){
+        if ([[emailField stringValue]length] > 0){
+          [loginButton setEnabled:true];
+        } else {
+          [loginButton setEnabled:false];
+        }
+      })
+    });
+
+    emailField.setDelegate(emailDelegate.getClassInstance());
+
+    function endSheet() {
+      [loginWindow orderOut:nil];
+      [[app mainWindow] endSheet: loginWindow];
+      [cancelButton setCOSJSTargetFunction:undefined];
+      [loginButton setCOSJSTargetFunction:undefined];
+      COScript.currentCOScript().setShouldKeepAround_(false);
+    }
+
+    var loginButton = createButton("Login", false, NSMakeRect(268, 8, 100, 30));
+    [loginButton setKeyEquivalent:"\r"];
+    [loginButton setCOSJSTargetFunction:function(sender) {
+      var email = emailField.stringValue();
+      var response = api.SSOAuth(context, email);
+
+      if (response) {
+        if (!response.enabled) {
+          showAlert("Sorry, you cannot authorize using SSO", "", context);
+        } else if (!response.redirectUrl) {
+          showAlert("Sorry, you cannot authorize using SSO", "Your company's Identity Provider settings don't allow you to authorize with SSO from the plugin", context);
+        } else {
+          endSheet();
+          _this.showWebView(context, response.redirectUrl);
+        }
+
+      }
+    }];
+
+    var cancelButton = createButton("Cancel", true, NSMakeRect(167, 8, 100, 30));
+    [cancelButton setKeyEquivalent:@"\033"];
+    [cancelButton setCOSJSTargetFunction:function(sender) {
+      endSheet();
+      _this.showLoginWindow(context);
+    }];
+
+    var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 80)];
+    [bottomActionsView setWantsLayer:true];
+
+    [[loginWindow contentView] addSubview:bottomActionsView];
+
     [bottomActionsView addSubview:cancelButton];
     [bottomActionsView addSubview:loginButton];
 
@@ -313,7 +427,7 @@ function UI() {
     [[app mainWindow] beginSheet:logoutWindow completionHandler:nil];
   }
 
-  UI.prototype.showSSOWebView = function(context) {
+  UI.prototype.showWebView = function(context, startURL) {
     COScript.currentCOScript().setShouldKeepAround_(true);
 
     var delegate = new MochaJSDelegate();
@@ -332,17 +446,45 @@ function UI() {
   	[webviewWindow setFrame:NSMakeRect(0, 0, 500, 420) display:false];
 
     var frame = NSMakeRect(0,60,500,340);
-    var stringURL = [NSString stringWithFormat:ssoURL];
-    var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    var url = [NSURL URLWithString:webStringURL];
+    var url = [NSURL URLWithString:startURL];
     var webView = [[WebView alloc] initWithFrame:frame];
 
+    [webView setHidden: true];
     [[webView mainFrame] loadRequest:[NSURLRequest requestWithURL:url]];
     [[webviewWindow contentView] addSubview:webView];
     [webviewWindow center];
 
+    var indicator = [[[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 500, 420)] autorelease];
+    [indicator setStyle:NSProgressIndicatorSpinningStyle];
+
+    [[webviewWindow contentView] addSubview:indicator];
+
+    function showSpinner() {
+      [webView setHidden: true];
+      [indicator setHidden: false];
+      [indicator startAnimation:indicator];
+    }
+
+    function hideSpinner() {
+      [webView setHidden: false];
+      [indicator setHidden: true];
+      [indicator stopAnimation:indicator];
+    }
+
+    delegate.setHandlerForSelector("webView:didStartProvisionalLoadForFrame:", function(webView, didStartProvisionalLoadForFrame) {
+      showSpinner();
+    });
+
+    delegate.setHandlerForSelector("webView:didFinishLoadForFrame:", function(webView, didFinishLoadForFrame) {
+      hideSpinner();
+    });
+
+     delegate.setHandlerForSelector("webView:didFailLoadWithError:forFrame:", function(webView, didFailLoadWithError, forFrame) {
+      hideSpinner();
+    });
+
     delegate.setHandlerForSelector("webView:resource:didReceiveResponse:fromDataSource:", function(webView, resource, didReceiveResponse, fromDataSource) {
-      var isApp = appURL == [webView mainFrameURL]
+      var isApp = appURL == [webView mainFrameURL];
 
       if (isApp) {
         COScript.currentCOScript().setShouldKeepAround_(false);
@@ -373,15 +515,16 @@ function UI() {
     webView.setResourceLoadDelegate_(delegate.getClassInstance());
 
   	var cancelButton = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 0, 0)];
-  	[cancelButton setTitle:"Cancel"]
-  	[cancelButton setBezelStyle:NSRoundedBezelStyle]
-  	[cancelButton sizeToFit]
-  	[cancelButton setFrame:NSMakeRect(380, 14, 100, 30)]
-  	[cancelButton setKeyEquivalent:@"\033"]
+  	[cancelButton setTitle:"Cancel"];
+  	[cancelButton setBezelStyle:NSRoundedBezelStyle];
+  	[cancelButton sizeToFit];
+  	[cancelButton setFrame:NSMakeRect(380, 14, 100, 30)];
+  	[cancelButton setKeyEquivalent:@"\033"];
   	[cancelButton setCOSJSTargetFunction:function(sender) {
       [webView close];
   		[webviewWindow orderOut:nil];
   		[NSApp stopModal];
+      _this.showLoginWindow(context);
   	}]
 
     [[webviewWindow contentView] addSubview:cancelButton];
@@ -478,6 +621,7 @@ function UI() {
       [app stopModal];
       COScript.currentCOScript().setShouldKeepAround_(false);
     }];
+
     [cancelButton setKeyEquivalent:@"\033"]
     [cancelButton setAction:"callAction:"];
 
