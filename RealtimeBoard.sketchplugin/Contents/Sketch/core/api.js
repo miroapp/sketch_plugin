@@ -307,7 +307,7 @@ function Api() {
       var centralYPos = height / 2 + yPos;
       var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
 
-      if (resourceId != nil && (originalId == nil || originalId == objectId)) {
+      if (resourceId != nil && (originalId == nil || [objectId isEqualToString:originalId])) {
         dataArray.push(makeDataString(transformationData, resourceId));
       } else {
         dataArray.push(makeDataString(transformationData));
