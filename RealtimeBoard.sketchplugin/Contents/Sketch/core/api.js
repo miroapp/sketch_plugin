@@ -44,6 +44,10 @@ function dealWithErrors(context, message) {
   [alert runModal];
 }
 
+function removeForbiddenCharacters(string) {
+  return string.replace(/[\\/,]/g, "");
+}
+
 function Api() {
   Api.prototype.UploadEnum = {
     SUCCESS: 1,
@@ -394,7 +398,7 @@ function Api() {
       if (exportAll == 1 || (artboards[i].isSelected() && exportAll == 0)) {
         var msartboard = artboards[i];
         var artboardID = [msartboard objectID];
-        var name = [msartboard name];
+        var name = removeForbiddenCharacters([msartboard name]);
         var path = exportPath + "/" + artboardID + "/" + name + ".png";
         var format = [[MSExportFormat alloc] init];
 
