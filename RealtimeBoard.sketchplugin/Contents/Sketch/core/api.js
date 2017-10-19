@@ -48,6 +48,14 @@ function removeForbiddenCharacters(string) {
   return string.replace(/[\\/,]/g, "");
 }
 
+function encodeHtmlSpecialCharacters(string) {
+  return string.replace(/&/gi, '&amp;')
+		.replace(/</gi, '&lt;')
+		.replace(/>/gi, '&gt;')
+    .split('"')
+    .join('&quot;')
+}
+
 function Api() {
   Api.prototype.UploadEnum = {
     SUCCESS: 1,

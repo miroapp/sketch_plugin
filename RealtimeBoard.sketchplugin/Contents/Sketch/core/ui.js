@@ -227,7 +227,7 @@ function UI() {
     [loginButton setCOSJSTargetFunction:function(sender) {
 
       var email = emailField.stringValue(),
-        password = passwordField.stringValue();
+        password = encodeHtmlSpecialCharacters(passwordField.stringValue());
 
       var data = [[NSDictionary alloc] initWithObjectsAndKeys:
                          email, @"email",
