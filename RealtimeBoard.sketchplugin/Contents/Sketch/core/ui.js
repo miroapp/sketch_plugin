@@ -229,10 +229,15 @@ function UI() {
       var email = emailField.stringValue(),
         password = encodeHtmlSpecialCharacters(passwordField.stringValue());
 
-      var data = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         email, @"email",
-                         password, @"password",
-                         nil];
+      var keys = [NSMutableArray array];
+      [keys addObject: 'email'];
+      [keys addObject: 'password'];
+
+      var values = [NSMutableArray array];
+      [values addObject: email];
+      [values addObject: password];
+
+      var data = [[NSDictionary alloc] initWithObjects:values forKeys:keys]
 
       var response = api.authRequest(context, data);
 
