@@ -79,6 +79,14 @@ function Api() {
     }
   }
 
+  Api.prototype.setFromRetina = function(fromRetina) {
+    this.setSetting("from_retina", fromRetina);
+  }
+
+  Api.prototype.getFromRetina = function() {
+    return this.getSetting("from_retina");
+  }
+
   Api.prototype.setToken = function(token) {
     this.setSetting("rtb_token", token);
   }
@@ -92,7 +100,7 @@ function Api() {
   }
 
   Api.prototype.getLastBoardId = function() {
-    return this.getSetting("last_board_id")
+    return this.getSetting("last_board_id");
   }
 
   Api.prototype.setOpenBoard = function(openBoard) {
@@ -276,7 +284,8 @@ function Api() {
     var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     var token = this.getToken();
     var auth = "hash " + token;
-    var exportInfoList = this.artboardsToPNG(context, exportAll);
+    var scale = this.getFromRetina() == 1 ? 2 : 1;
+    var exportInfoList = this.artboardsToPNG(context, exportAll, scale);
 
     if (exportInfoList.length == 0) {
       var document = context.document;
@@ -293,13 +302,14 @@ function Api() {
     var task = [[NSTask alloc] init];
     [task setLaunchPath:"/usr/bin/curl"];
 
-    var makeDataString = function(positionData, identifier) {
-      if (!positionData) {
-        positionData = '';
+    var makeDataString = function(transformationData, resourceSizeData, identifier) {
+      if (!transformationData) {
+        transformationData = '';
       }
 
       var idField = identifier ? '"id": "'+ identifier + '",' : '';
-      return '{' + idField + '"type": "ImageWidget","json": "{\\"transformationData\\": { ' + positionData + ' }}"}';
+      return '{' + idField + '"type": "ImageWidget","json": "{\\"transformationData\\": { ' + transformationData + ' },'
+      + '\\"resourceSizeData\\": { ' + resourceSizeData + '}}"}';
     };
 
     var dataString = '',
@@ -317,12 +327,15 @@ function Api() {
       var height = absoluteInfluenceRect.size.height;
       var centralXPos = width / 2 + xPos;
       var centralYPos = height / 2 + yPos;
-      var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
+      var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }'
+      + ', \\"scaleData\\":{\\"scale\\": ' + scale + ' }';
+
+      var resourceSizeData = '\\"width\\": ' + width + ', \\"height\\":' + height;
 
       if (resourceId != nil && (originalId == nil || [objectId isEqualToString:originalId])) {
-        dataArray.push(makeDataString(transformationData, resourceId));
+        dataArray.push(makeDataString(transformationData, resourceSizeData, resourceId));
       } else {
-        dataArray.push(makeDataString(transformationData));
+        dataArray.push(makeDataString(transformationData, resourceSizeData));
       }
 
       if (originalId != objectId) {
@@ -396,7 +409,7 @@ function Api() {
     }
   }
 
-  Api.prototype.artboardsToPNG = function(context, exportAll) {
+  Api.prototype.artboardsToPNG = function(context, exportAll, scale) {
     var document = context.document;
     var page = [document currentPage];
     var artboards = [page artboards];
@@ -411,6 +424,7 @@ function Api() {
         var format = [[MSExportFormat alloc] init];
 
         format.fileFormat = "png";
+        format.scale = scale;
 
         var exportRequest = [[MSExportRequest exportRequestsFromExportableLayer:msartboard exportFormats:[format] useIDForName:true] firstObject];
         [document saveArtboardOrSlice:exportRequest toFile:path];

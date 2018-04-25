@@ -115,7 +115,7 @@ function showAlert(title, message, context) {
 }
 
 function UI() {
-  UI.prototype.showLoginWindow = function(context) {
+  UI.prototype.showLoginWindow = function(context, syncSelected = true) {
     var app = [NSApplication sharedApplication];
 
     var loginWindow = [[NSWindow alloc] init];
@@ -248,7 +248,7 @@ function UI() {
           var token = response.token;
           api.setToken(token);
           endSheet();
-          _this.showExportWindow(context);
+          _this.showExportWindow(context, syncSelected);
         }
       }
     }];
@@ -609,9 +609,18 @@ function UI() {
       [radioGroup selectCellWithTag:101];
     }
 
-    var checked = api.getOpenBoard() == 1 ? true : false;
+    var retinaChecked = api.getFromRetina() == 1 ? true : false;
 
-    var openBoard = createCheckbox("Open RealtimeBoard after sync", checked, NSMakeRect(45, 70, 300, 22));
+    var fromRetina = createCheckbox("Export at @2x and scale to 50% on canvas", retinaChecked, NSMakeRect(45, 70, 300, 22));
+    [[exportWindow contentView] addSubview:fromRetina];
+
+    [fromRetina setCOSJSTargetFunction:function(sender) {
+      api.setFromRetina(fromRetina.state());
+    }];
+
+    var openBoardChecked = api.getOpenBoard() == 1 ? true : false;
+
+    var openBoard = createCheckbox("Open RealtimeBoard after sync", openBoardChecked, NSMakeRect(45, 40, 300, 22));
     [[exportWindow contentView] addSubview:openBoard];
 
     [openBoard setCOSJSTargetFunction:function(sender) {

@@ -31,6 +31,6 @@ function sync(context, syncSelected) {
   if (authCheckResult && authCheckResult.success == 1) {
     ui.showExportWindow(context, syncSelected);
   } else if (!errorHandlingInfo.connectionError) {
-    ui.showLoginWindow(context, true);
+    ui.showLoginWindow(context, syncSelected);
   }
 }
