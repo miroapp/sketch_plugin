@@ -302,14 +302,14 @@ function Api() {
     var task = [[NSTask alloc] init];
     [task setLaunchPath:"/usr/bin/curl"];
 
-    var makeDataString = function(transformationData, resourceSizeData, identifier) {
+    var makeDataString = function(transformationData, sizeData, identifier) {
       if (!transformationData) {
         transformationData = '';
       }
 
       var idField = identifier ? '"id": "'+ identifier + '",' : '';
-      return '{' + idField + '"type": "ImageWidget","json": "{\\"transformationData\\": { ' + transformationData + ' },'
-      + '\\"resourceSizeData\\": { ' + resourceSizeData + '}}"}';
+
+      return '{' + idField + '"type": "ImageWidget","json": "{\\"transformationData\\": { ' + transformationData + '}}"}';
     };
 
     var dataString = '',
@@ -327,15 +327,18 @@ function Api() {
       var height = absoluteInfluenceRect.size.height;
       var centralXPos = width / 2 + xPos;
       var centralYPos = height / 2 + yPos;
-      var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }'
-      + ', \\"scaleData\\":{\\"scale\\": ' + scale + ' }';
+      var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
 
-      var resourceSizeData = '\\"width\\": ' + width + ', \\"height\\":' + height;
+      if (scale == 2) {
+        transformationData += ', \\"scaleData\\":{\\"scale\\": ' + 0.5 + ' }';
+      }
+
+      var sizeData = '\\"width\\": ' + width + ', \\"height\\":' + height;
 
       if (resourceId != nil && (originalId == nil || [objectId isEqualToString:originalId])) {
-        dataArray.push(makeDataString(transformationData, resourceSizeData, resourceId));
+        dataArray.push(makeDataString(transformationData, sizeData, resourceId));
       } else {
-        dataArray.push(makeDataString(transformationData, resourceSizeData));
+        dataArray.push(makeDataString(transformationData, sizeData));
       }
 
       if (originalId != objectId) {

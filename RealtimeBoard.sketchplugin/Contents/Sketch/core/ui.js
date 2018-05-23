@@ -546,9 +546,9 @@ function UI() {
     COScript.currentCOScript().setShouldKeepAround_(true);
 
     var exportWindow = [[NSWindow alloc] init];
-    [exportWindow setFrame:NSMakeRect(0, 0, 470, 315) display: false];
+    [exportWindow setFrame:NSMakeRect(0, 0, 470, 345) display: false];
 
-    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 235, 470, 60)];
+    var headerView = [[NSView alloc] initWithFrame:NSMakeRect(0, 265, 470, 60)];
     [headerView setWantsLayer:true];
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[exportWindow contentView] addSubview:headerView];
@@ -576,10 +576,10 @@ function UI() {
       return item["title"];
     });
 
-    var boardsLabel = createLabel("Select a board for syncing", 12, false, NSMakeRect(45, 195, 385, 25));
+    var boardsLabel = createLabel("Select a board for syncing", 12, false, NSMakeRect(45, 225, 385, 25));
     [[exportWindow contentView] addSubview:boardsLabel];
 
-    var boardsField = [[NSComboBox alloc] initWithFrame: NSMakeRect(45, 175, 250, 25)];
+    var boardsField = [[NSComboBox alloc] initWithFrame: NSMakeRect(45, 205, 250, 25)];
     [[exportWindow contentView] addSubview:boardsField];
 
     [boardsField setCompletes:true];
@@ -602,7 +602,7 @@ function UI() {
     }
 
     var radioGroupItems = ["All the artboards on this page", "Only selected artboards on this page"];
-    var radioGroup = createRadioButtons(radioGroupItems, 2, 1, NSMakeRect(45, 110, 300, 50), 300, 20);
+    var radioGroup = createRadioButtons(radioGroupItems, 2, 1, NSMakeRect(45, 140, 300, 50), 300, 20);
     [[exportWindow contentView] addSubview:radioGroup];
 
     if (syncSelected) {
@@ -611,7 +611,7 @@ function UI() {
 
     var retinaChecked = api.getFromRetina() == 1 ? true : false;
 
-    var fromRetina = createCheckbox("Export at @2x and scale to 50% on canvas", retinaChecked, NSMakeRect(45, 70, 300, 22));
+    var fromRetina = createCheckbox("Export at @2x and scale to 50% on canvas", retinaChecked, NSMakeRect(45, 100, 300, 22));
     [[exportWindow contentView] addSubview:fromRetina];
 
     [fromRetina setCOSJSTargetFunction:function(sender) {
@@ -620,7 +620,7 @@ function UI() {
 
     var openBoardChecked = api.getOpenBoard() == 1 ? true : false;
 
-    var openBoard = createCheckbox("Open RealtimeBoard after sync", openBoardChecked, NSMakeRect(45, 40, 300, 22));
+    var openBoard = createCheckbox("Open RealtimeBoard after sync", openBoardChecked, NSMakeRect(45, 70, 300, 22));
     [[exportWindow contentView] addSubview:openBoard];
 
     [openBoard setCOSJSTargetFunction:function(sender) {
