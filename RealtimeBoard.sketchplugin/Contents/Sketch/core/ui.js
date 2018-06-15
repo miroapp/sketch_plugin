@@ -115,7 +115,7 @@ function showAlert(title, message, context) {
 }
 
 function UI() {
-  UI.prototype.showLoginWindow = function(context, syncSelected = true) {
+  UI.prototype.showLoginWindow = function(context, syncSelected) {
     var app = [NSApplication sharedApplication];
 
     var loginWindow = [[NSWindow alloc] init];
@@ -356,7 +356,7 @@ function UI() {
     [cancelButton setKeyEquivalent:@"\033"];
     [cancelButton setCOSJSTargetFunction:function(sender) {
       endSheet();
-      _this.showLoginWindow(context);
+      _this.showLoginWindow(context, true);
     }];
 
     var bottomActionsView = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 450, 80)];
@@ -529,7 +529,7 @@ function UI() {
       [webView close];
   		[webviewWindow orderOut:nil];
   		[NSApp stopModal];
-      _this.showLoginWindow(context);
+      _this.showLoginWindow(context, true);
   	}]
 
     [[webviewWindow contentView] addSubview:cancelButton];

@@ -29,6 +29,6 @@ var onRun = function(context) {
   if (api.getToken()) {
     ui.showLogoutWindow(context);
   } else {
-    ui.showLoginWindow(context);
+    ui.showLoginWindow(context, true);
   }
 }
