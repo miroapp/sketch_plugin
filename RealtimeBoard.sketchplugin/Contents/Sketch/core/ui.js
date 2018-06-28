@@ -579,11 +579,38 @@ function UI() {
     var boardsLabel = createLabel("Select a board for syncing", 12, false, NSMakeRect(45, 225, 385, 25));
     [[exportWindow contentView] addSubview:boardsLabel];
 
-    var boardsField = [[NSComboBox alloc] initWithFrame: NSMakeRect(45, 205, 250, 25)];
-    [[exportWindow contentView] addSubview:boardsField];
+    var ACComboBoxCell = api.makeSubclass("ACComboBoxCell", NSComboBoxCell, {
+        "completedString:": function(string) {
+          var l = [string length];
 
-    [boardsField setCompletes:true];
-    [boardsField addItemsWithObjectValues:boardsList];
+          if (!!l) {
+            var values = this.objectValues();
+
+            for (var i = 0; i < values.length; i++) {
+              var tmp = values[i];
+
+              if ([[tmp commonPrefixWithString:string options:NSCaseInsensitiveSearch] length] == l) {
+                if([tmp length] == l) {
+                  this.selectItemAtIndex(i);
+                }
+
+                return tmp;
+              }
+            }
+          }
+
+          return nil;
+        }
+    });
+
+    var acCell = [[ACComboBoxCell alloc] init];
+    [acCell addItemsWithObjectValues:boardsList];
+    [acCell setCompletes:true];
+    [acCell setEditable:true];
+
+    var boardsField = [[NSComboBox alloc] initWithFrame: NSMakeRect(45, 205, 250, 25)];
+    [boardsField setCell:acCell];
+    [[exportWindow contentView] addSubview:boardsField];
 
     var lastBoardId = api.getLastBoardId();
 
@@ -595,7 +622,8 @@ function UI() {
       for (var i = 0; i < boardIds.length; i++) {
         var boardId = boardIds[i];
         if ([lastBoardId isEqualToString:boardId]) {
-          [boardsField selectItemAtIndex:i];
+          [acCell selectItemAtIndex:i];
+
           break;
         }
       }
