@@ -24,6 +24,7 @@ SOFTWARE.
 
 @import "core/MochaJSDelegate.js";
 @import "core/api.js";
+@import "core/utils.js";
 
 var ui = new UI();
 
@@ -137,7 +138,7 @@ function UI() {
 
     [[loginWindow contentView] addSubview:headerView];
 
-    var errorMessageLabel = createLabel("The username or password you entered is incorrect.", 13, true, NSMakeRect(45, 230, 320, 25));
+    var errorMessageLabel = createLabel("", 13, true, NSMakeRect(45, 230, 360, 25));
     [errorMessageLabel setTextColor:[NSColor redColor]];
     [[loginWindow contentView] addSubview:errorMessageLabel];
 
@@ -243,7 +244,17 @@ function UI() {
 
       if (response) {
         if (response.error) {
-          [errorMessageLabel setHidden: false];
+          var messages = getMessagesByError(response.error);
+
+          if (messages.label) {
+           [errorMessageLabel setStringValue:messages.label];
+           [errorMessageLabel setHidden: false];
+          }
+
+          if (messages.alert) {
+            showAlert("An error occurred", messages.alert, context);
+          }
+
         } else {
           var token = response.token;
           api.setToken(token);
@@ -579,7 +590,7 @@ function UI() {
     var boardsLabel = createLabel("Select a board for syncing", 12, false, NSMakeRect(45, 225, 385, 25));
     [[exportWindow contentView] addSubview:boardsLabel];
 
-    var ACComboBoxCell = api.makeSubclass("ACComboBoxCell", NSComboBoxCell, {
+    var ACComboBoxCell = makeSubclass("ACComboBoxCell", NSComboBoxCell, {
         "completedString:": function(string) {
           var l = [string length];
 
