@@ -22,24 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-var ERROR_REASONS = {
-  USER_BLOCKED: "userBlocked",
-  AUTH_FAILED: "authorizationFailed"
+var ErrorReasons = {
+  userBlocked: "userBlocked",
+  authorizationFailed: "authorizationFailed",
+  suspiciousActivity: "suspiciousActivity",
+  termsViolation: "termsViolation",
+  userDeleted: "userDeleted",
+  userLockout: "userLockout"
 };
 
-var BLOCK_REASONS = {
-  SUSPICIOUS_ACTIVITY: "SUSPICIOUS_ACTIVITY",
-  TERMS_VIOLATION: "TERMS_VIOLATION",
-  USER_DELETED: "USER_DELETED"
-};
-
-var ERROR_MESSAGES = {
-  SUSPICIOUS_ACTIVITY: 'Your account is locked due to suspicious activity.',
-  TERMS_VIOLATION: 'Your account is locked due to a Terms of Use violation.',
-  USER_DELETED: 'Your account is currently being deleted.',
-  USER_DELETED_DESC: 'Until then, you cannot log in or create an account with this email.',
-  CONTACT_US: 'Please contact our support team at support@realtimeboard.com for further assistance.',
-  PASSWORD_INCORRECT: 'The username or password you entered is incorrect.'
+var ErrorMessages = {
+  suspiciousActivity: 'Your account is locked due to suspicious activity.',
+  termsViolation: 'Your account is locked due to a Terms of Use violation.',
+  userDeleted: 'Your account is currently being deleted.',
+  userDeletedDesc: 'Until then, you cannot log in or create an account with this email.',
+  userLockout: 'Your account is locked due to multiple failed login attempts for 60 minutes. To unlock your account please wait or visit https://realtimeboard.com/email-unlock/',
+  contactUs: 'Please contact our support team at support@realtimeboard.com for further assistance.',
+  passwordIncorrect: 'The username or password you entered is incorrect.',
+  defaultLockout: 'Your account is locked.'
 };
 
 function getMessagesByError(error) {
@@ -48,21 +48,26 @@ function getMessagesByError(error) {
     alert: nil
   }
 
-  if (error.code == 403 && error.reason == ERROR_REASONS.USER_BLOCKED) {
-    var blockReason = JSON.parse(error.location)[0];
+  if (error.code == 403) {
     var messageEnd = "";
 
-    messages.label = ERROR_MESSAGES[blockReason];
-
-    if (blockReason == BLOCK_REASONS.SUSPICIOUS_ACTIVITY || blockReason == BLOCK_REASONS.TERMS_VIOLATION) {
-      messageEnd = ERROR_MESSAGES.CONTACT_US;
-    } else if (blockReason == BLOCK_REASONS.USER_DELETED) {
-      messageEnd = ERROR_MESSAGES.USER_DELETED_DESC;
+    if (error.reason == ErrorReasons.suspiciousActivity || error.reason == ErrorReasons.termsViolation) {
+      messageEnd = ErrorMessages.contactUs;
+    } else if (error.reason == ErrorReasons.userDeleted) {
+      messageEnd = ErrorMessages.userDeletedDesc;
+    } else if (error.reason == ErrorReasons.userLockout) {
+      messageEnd = ErrorMessages.userLockout;
     }
 
-    messages.alert = ERROR_MESSAGES[blockReason] + " " + messageEnd;
+    if (error.reason == ErrorReasons.userLockout) {
+      messages.label = ErrorMessages.defaultLockout;
+      messages.alert = ErrorMessages[error.reason];
+    } else {
+      messages.label = ErrorMessages[error.reason];
+      messages.alert = ErrorMessages[error.reason] + " " + messageEnd;
+    }
   } else {
-    messages.label = ERROR_MESSAGES.PASSWORD_INCORRECT;
+    messages.label = ErrorMessages.passwordIncorrect;
   }
 
   return messages;
