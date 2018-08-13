@@ -222,7 +222,7 @@ function Api() {
   Api.prototype.request = function(context, url, method, data, errorHandlingInfo) {
     var fullURL = path + url;
     var stringURL = [NSString stringWithFormat:fullURL];
-    var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding].replace(/\+/g, '%2B');
     var request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:webStringURL]];
 
     [request setHTTPMethod:method];
