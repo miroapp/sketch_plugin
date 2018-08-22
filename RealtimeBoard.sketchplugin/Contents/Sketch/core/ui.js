@@ -410,10 +410,7 @@ function UI() {
     [logoutButton setCOSJSTargetFunction:function(sender) {
       var errorHandlingInfo = {};
       api.logoutRequest(context, errorHandlingInfo);
-
-      if (!errorHandlingInfo.connectionError) {
-        api.setToken(nil);
-      }
+      api.setToken(nil);
 
       [logoutWindow orderOut:nil];
       [[app mainWindow] endSheet: logoutWindow];
