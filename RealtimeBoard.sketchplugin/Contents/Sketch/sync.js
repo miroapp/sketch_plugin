@@ -26,11 +26,22 @@ SOFTWARE.
 @import 'core/api.js';
 
 function sync(context, syncSelected) {
-  var errorHandlingInfo = {};
-  var authCheckResult = api.authCheckRequest(context, errorHandlingInfo);
-  if (authCheckResult && authCheckResult.success == 1) {
-    ui.showExportWindow(context, syncSelected);
-  } else if (!errorHandlingInfo.connectionError) {
+  var token = api.getToken();
+
+  if (token) {
+    var response = api.authCheckRequest(context);
+
+    if (response) {
+      if (response.success == 1) {
+        ui.showExportWindow(context, syncSelected);
+      } else if (response.error && response.error.code == 401) {
+        api.setToken(nil);
+        ui.showLoginWindow(context, syncSelected);
+      } else {
+        dealWithErrors(context, 'Something went wrong.');
+      }
+    }
+  } else {
     ui.showLoginWindow(context, syncSelected);
   }
 }

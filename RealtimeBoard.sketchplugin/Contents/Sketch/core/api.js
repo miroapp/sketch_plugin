@@ -111,8 +111,8 @@ function Api() {
     return this.getSetting("open_board");
   }
 
-  Api.prototype.getBoards = function(context, errorHandlingInfo) {
-    var accountsResult = api.accountsRequest(context, errorHandlingInfo);
+  Api.prototype.getBoards = function(context) {
+    var accountsResult = api.accountsRequest(context);
 
     if (accountsResult) {
       accountsResult = accountsResult.filter(function(item) {
@@ -121,7 +121,7 @@ function Api() {
       var boards = [];
 
       for (var i = 0; i < accountsResult.length; i++) {
-        var accountBoards = api.boardsRequest(context, accountsResult[i].id, errorHandlingInfo);
+        var accountBoards = api.boardsRequest(context, accountsResult[i].id);
 
         if (accountBoards) {
           accountBoards = accountBoards.data;
@@ -173,14 +173,14 @@ function Api() {
     return result;
   }
 
-  Api.prototype.logoutRequest = function(context, errorHandlingInfo) {
+  Api.prototype.logoutRequest = function(context) {
     var token = this.getToken();
     var result = false;
 
     if (token) {
       var url = "auth/logout";
       var data = { token: token };
-      result = this.request(context, url, "POST", data, errorHandlingInfo);
+      result = this.request(context, url, "POST", data);
     }
 
     return result;
@@ -195,25 +195,25 @@ function Api() {
     return result;
   }
 
-  Api.prototype.accountsRequest = function(context, errorHandlingInfo) {
+  Api.prototype.accountsRequest = function(context) {
     var token = this.getToken();
     var result = null;
 
     if (token) {
       var url = "accounts/?fields=id,title,currentUserPermission,expired";
-      result = this.request(context, url, "GET", null, errorHandlingInfo);
+      result = this.request(context, url, "GET", null);
     }
 
     return result;
   }
 
-  Api.prototype.boardsRequest = function(context, accountId, errorHandlingInfo) {
+  Api.prototype.boardsRequest = function(context, accountId) {
     var token = this.getToken();
     var result = null;
 
     if (token) {
       var url = "boards/?attachment=" + accountId + "&fields=title,id,currentUserPermission{role},lastOpenedByMeDate&limit=1000";
-      result = this.request(context, url, "GET", null, errorHandlingInfo);
+      result = this.request(context, url, "GET", null);
     }
 
     return result;
@@ -241,19 +241,9 @@ function Api() {
     }
 
     var response = [[MOPointer alloc] init];
-    var error = [[MOPointer alloc] init];
-    var dataResp = [NSURLConnection sendSynchronousRequest:request returningResponse:response error:error];
+    var dataResp = [NSURLConnection sendSynchronousRequest:request returningResponse:response error:nil];
 
-    if (error.value() == nil && dataResp != nil) {
-      var res = [NSJSONSerialization JSONObjectWithData:dataResp options:NSJSONReadingMutableLeaves error:nil]
-      if (res!=nil && res.errMessage != nil) {
-        if (errorHandlingInfo && errorHandlingInfo.message) {
-          dealWithErrors(context, errorHandlingInfo.message);
-        }
-
-        return false;
-      }
-
+    if (dataResp != nil) {
       var responseText = [[NSString alloc] initWithData:dataResp encoding:NSUTF8StringEncoding];
 
       try {
@@ -268,10 +258,6 @@ function Api() {
         return false;
       }
     } else {
-      if (errorHandlingInfo) {
-        errorHandlingInfo.connectionError = true;
-      }
-
       dealWithErrors(context);
 
       return false;

@@ -85,3 +85,7 @@ function makeSubclass(className, BaseClass, selectorHandlerDict) {
 
   return NSClassFromString(uniqueClassName);
 }
+
+function logMsg(msg) {
+  log('[sketch]: ' + msg)
+}

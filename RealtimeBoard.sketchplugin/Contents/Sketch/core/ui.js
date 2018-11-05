@@ -408,8 +408,7 @@ function UI() {
     var logoutButton = createButton("Logout", true, NSMakeRect(255, 8, 100, 30));
     [logoutButton setKeyEquivalent:"\r"]
     [logoutButton setCOSJSTargetFunction:function(sender) {
-      var errorHandlingInfo = {};
-      api.logoutRequest(context, errorHandlingInfo);
+      api.logoutRequest(context);
       api.setToken(nil);
 
       [logoutWindow orderOut:nil];
@@ -570,12 +569,12 @@ function UI() {
     [imageView setImage: icon];
     [headerView addSubview:imageView];
 
-    var errorHandlingInfo = {
-      message: "Sorry, the board list cannot be received."
-    }
-    var boards = api.getBoards(context, errorHandlingInfo);
+
+    var boards = api.getBoards(context);
 
     if (!boards) {
+      dealWithErrors(context, "Sorry, the board list cannot be received.")
+
       [exportWindow orderOut:nil];
       [app stopModal];
     }
