@@ -249,19 +249,23 @@ function Api() {
       try {
         var json = JSON.parse(responseText);
 
+        if (json.error) {
+          logErr(JSON.stringify(json.error));
+        }
+
         return json;
       } catch(e) {
         var message = "Unable to parse response data for path: " + url;
 
         dealWithErrors(context, message);
-
-        return false;
       }
     } else {
-      dealWithErrors(context);
+      logErr('dataResp == null');
 
-      return false;
+      dealWithErrors(context);
     }
+
+    return false;
   }
 
   Api.prototype.uploadArtboardsToRTB = function(context, boardId, exportAll) {
@@ -381,7 +385,7 @@ function Api() {
       var res = [NSJSONSerialization JSONObjectWithData:outputData options:NSJSONReadingMutableLeaves error:nil]
       if (res != null) {
         if (res.error != nil) {
-          return this.UploadEnum.UPLOAD_FAILED;
+          logErr(res.error)
         } else {
           for (var i = 0; i < res.widgets.length; i++) {
             var artboard = exportInfoList[i];
@@ -390,12 +394,13 @@ function Api() {
           return this.UploadEnum.SUCCESS;
         }
       } else {
-        return this.UploadEnum.UPLOAD_FAILED;
+        logErr('res == null')
       }
-      return this.UploadEnum.UPLOAD_FAILED;
     } else {
-      return this.UploadEnum.UPLOAD_FAILED;
+      logErr('classNameOfOuput == _NSZeroData')
     }
+
+    return this.UploadEnum.UPLOAD_FAILED;
   }
 
   Api.prototype.artboardsToPNG = function(context, exportAll, scale) {

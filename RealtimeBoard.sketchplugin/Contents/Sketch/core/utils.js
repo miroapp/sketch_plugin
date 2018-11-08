@@ -87,5 +87,9 @@ function makeSubclass(className, BaseClass, selectorHandlerDict) {
 }
 
 function logMsg(msg) {
-  log('[sketch]: ' + msg)
+  log('[sketch-rtb]: ' + msg)
+}
+
+function logErr(err) {
+  log('[sketch-rtb-error]: ' + err)
 }
