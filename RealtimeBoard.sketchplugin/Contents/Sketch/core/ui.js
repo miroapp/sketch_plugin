@@ -127,11 +127,11 @@ function UI() {
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[loginWindow contentView] addSubview:headerView];
 
-    var titleField = createLabel("Log into RealtimeBoard", 15, false, NSMakeRect(45, 15, 250, 25));
+    var titleField = createLabel("Log into Miro", 15, false, NSMakeRect(45, 15, 250, 25));
     [titleField setFont:[NSFont boldSystemFontOfSize:14]];
     [headerView addSubview:titleField];
 
-    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(305, 5, 60, 60)],
+    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(305, 0, 60, 60)],
     icon = getLogoImage(context);
     [imageView setImage: icon];
     [headerView addSubview:imageView];
@@ -298,14 +298,14 @@ function UI() {
     [titleField setFont:[NSFont boldSystemFontOfSize:14]];
     [headerView addSubview:titleField];
 
-    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(305, 5, 60, 60)],
+    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(305, 0, 60, 60)],
     icon = getLogoImage(context);
     [imageView setImage: icon];
     [headerView addSubview:imageView];
 
     [[loginWindow contentView] addSubview:headerView];
 
-    var messageLabel = createLabel("Your organization uses Single Sign On (SSO) with RealtimeBoard. Please log in using your SSO credentials.",
+    var messageLabel = createLabel("Your organization uses Single Sign On (SSO) with Miro. Please log in using your SSO credentials.",
      12, false, NSMakeRect(45, 125, 345, 75));
 
     messageLabel.usesSingleLineMode = false
@@ -394,11 +394,11 @@ function UI() {
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[logoutWindow contentView] addSubview:headerView];
 
-    var titleField = createLabel("Log out of RealtimeBoard", 15, false, NSMakeRect(45, 15, 250, 25));
+    var titleField = createLabel("Log out of Miro", 15, false, NSMakeRect(45, 15, 250, 25));
     [titleField setFont:[NSFont boldSystemFontOfSize:14]];
     [headerView addSubview:titleField];
 
-    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(295, 5, 60, 60)],
+    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(295, 0, 60, 60)],
     icon = getLogoImage(context);
     [imageView setImage: icon];
     [headerView addSubview:imageView];
@@ -560,11 +560,11 @@ function UI() {
     [headerView setBackgroundColor:[NSColor whiteColor]];
     [[exportWindow contentView] addSubview:headerView];
 
-    var titleField = createLabel("Sync artboards with RealtimeBoard", 15, false, NSMakeRect(45, 15, 365, 25));
+    var titleField = createLabel("Sync artboards with Miro", 15, false, NSMakeRect(45, 15, 365, 25));
     [titleField setFont:[NSFont boldSystemFontOfSize:14]];
     [headerView addSubview:titleField];
 
-    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(365, 5, 60, 60)],
+    var imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(365, 0, 60, 60)],
     icon = getLogoImage(context);
     [imageView setImage: icon];
     [headerView addSubview:imageView];
@@ -655,7 +655,7 @@ function UI() {
 
     var openBoardChecked = api.getOpenBoard() == 1 ? true : false;
 
-    var openBoard = createCheckbox("Open RealtimeBoard after sync", openBoardChecked, NSMakeRect(45, 70, 300, 22));
+    var openBoard = createCheckbox("Open Miro after sync", openBoardChecked, NSMakeRect(45, 70, 300, 22));
     [[exportWindow contentView] addSubview:openBoard];
 
     [openBoard setCOSJSTargetFunction:function(sender) {

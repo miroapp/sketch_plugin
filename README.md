@@ -1,16 +1,15 @@
-# RealtimeBoard plugin for Sketch
-[RealtimeBoard](https://realtimeboard.com/ux-tool/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin) is the simplest visual collaboration platform, trusted by teams and companies all over the world. The plugin for Sketch enables an easy and quick way to get images from Sketch right on the board. Send your artboards to RealtimeBoard in a couple of clicks and have your images synced whenever you make a change - without uploading them again.
-![RealtimeBoard](https://s3.amazonaws.com/rtb-uploads/sketch.png)
+# Miro plugin for Sketch
+[Miro (formerly RealtimeBoard)](https://realtimeboard.com/ux-tool/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin) is the most intuitive visual collaboration platform trusted by teams at innovative companies around the world. The Miro Plugin for Sketch enables you to quickly and easily import images from Sketch onto your Miro boards. Send your artboards into Miro in just a few clicks and sync your images automatically whenever you make a change—without having to upload them again.
+![Miro](https://s3.amazonaws.com/rtb-uploads/sketch.png)
 
-Use RealtimeBoard to:
-- Add, share and discuss your Sketch artboards with the team in RealtimeBoard
-- Collect all insights and reports in one place (Images, Docs, PDFs, Videos, Links etc)
-- Create reference moodboards together with your team
-- Create interface maps
-- Digitise the real post-its from your wall and brainstorm online.
-- Import mockups and get feedback in real-time
+Use Miro to:
+- Import Sketch mockups and get feedback in real-time within Miro
+- Collect all relevant assets in one place (images, docs, pdfs, videos, links, and more)
+- Create reference moodboards with your team
+- Build UX flows
+- Digitize sticky notes from your physical whiteboard to brainstorm with your distributed team online
 
-![RealtimeBoard](https://s3.amazonaws.com/rtb-uploads/sketch_2.png)
+![Miro](https://s3.amazonaws.com/rtb-uploads/sketch_2.png)
 
 
 # Installation

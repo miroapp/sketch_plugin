@@ -1,10 +1,10 @@
 {
-  "name": "RealtimeBoard",
+  "name": "Miro",
   "identifier" : "com.realtimeboard.sketch.plugin",
-  "version" : "1.4.0",
-  "description" : "Export and sync your artboards with RealtimeBoard",
-  "authorEmail" : "support@realtimeboard.com",
-  "author" : "RealtimeBoard",
+  "version" : "1.5.0",
+  "description" : "Export and sync your artboards with Miro",
+  "authorEmail" : "support@miro.com",
+  "author" : "Miro",
   "appcast": "https://raw.githubusercontent.com/RealtimeBoard/sketch_plugin/master/appcast.xml",
   "commands" : [
   {
