@@ -1,7 +1,7 @@
 {
   "name": "Miro",
   "identifier" : "com.realtimeboard.sketch.plugin",
-  "version" : "1.5.0",
+  "version" : "1.5.1",
   "description" : "Export and sync your artboards with Miro",
   "authorEmail" : "support@miro.com",
   "author" : "Miro",
@@ -9,23 +9,23 @@
   "commands" : [
   {
     "script" : "auth.js",
-    "name" : "Log into RealtimeBoard, Log out of RealtimeBoard",
+    "name" : "Log into Miro, Log out of Miro",
     "identifier" : "auth"
   },
   {
     "script" : "syncAll.js",
     "shortcut" : "command alt e",
-    "name" : "Sync all artboards with RealtimeBoard",
+    "name" : "Sync all artboards with Miro",
     "identifier" : "syncAll"
   },
   {
     "script" : "syncSelected.js",
     "shortcut" : "command alt shift e",
-    "name" : "Sync only selected artboards with RealtimeBoard",
+    "name" : "Sync only selected artboards with Miro",
     "identifier" : "syncSelected"
   }],
   "menu": {
-    "title": "RealtimeBoard",
+    "title": "Miro",
     "items": [
       "syncAll",
       "syncSelected",

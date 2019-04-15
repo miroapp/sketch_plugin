@@ -449,7 +449,7 @@ function UI() {
     for (var i = 0; i < cookies.length; i++) {
       var cookie = cookies[i];
 
-      if ([cookie domain] == 'realtimeboard.com') {
+      if ([cookie domain] == 'miro.com') {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
       }
     }
@@ -466,7 +466,8 @@ function UI() {
     [[webviewWindow contentView] addSubview:webView];
     [webviewWindow center];
 
-    var indicator = [[[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 500, 420)] autorelease];
+    // var indicator = [[[NSProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 500, 420)] autorelease];
+    var indicator = [[[NSProgressIndicator alloc] initWithFrame:NSMakeRect(225, 185, 50, 50)] autorelease];
     [indicator setStyle:NSProgressIndicatorSpinningStyle];
 
     [[webviewWindow contentView] addSubview:indicator];
@@ -506,7 +507,7 @@ function UI() {
         for (var i = 0; i < cookies.length; i++) {
           var cookie = cookies[i];
 
-          if ([cookie domain] == 'realtimeboard.com') {
+          if ([cookie domain] == 'miro.com') {
             if ([cookie name] == 'token') {
               api.setToken([cookie value]);
               break;
