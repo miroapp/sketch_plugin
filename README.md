@@ -1,5 +1,5 @@
 # Miro plugin for Sketch
-[Miro (formerly RealtimeBoard)](https://realtimeboard.com/ux-tool/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin) is the most intuitive visual collaboration platform trusted by teams at innovative companies around the world. The Miro Plugin for Sketch enables you to quickly and easily import images from Sketch onto your Miro boards. Send your artboards into Miro in just a few clicks and sync your images automatically whenever you make a change—without having to upload them again.
+[Miro (formerly RealtimeBoard)](https://miro.com/ux-tool/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin) is the most intuitive visual collaboration platform trusted by teams at innovative companies around the world. The Miro Plugin for Sketch enables you to quickly and easily import images from Sketch onto your Miro boards. Send your artboards into Miro in just a few clicks and sync your images automatically whenever you make a change—without having to upload them again.
 ![Miro](https://s3.amazonaws.com/rtb-uploads/sketch.png)
 
 Use Miro to:
@@ -18,4 +18,4 @@ Download and extract the contents of the zip archive. Then double-click the Real
 
 # Usage
 
-Check out [this quick tutorial](https://help.realtimeboard.com/support/solutions/articles/11000033924-sketch-plugin/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin)
+Check out [this quick tutorial](https://help.miro.com/hc/en-us/articles/360017731173-Sketch-Plugin/?utm_source=sketch_github&utm_medium=marketplace&utm_campaign=sketch_plugin)
