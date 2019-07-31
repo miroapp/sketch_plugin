@@ -139,17 +139,6 @@ function Api() {
         }
       }
 
-      boards = boards.sort(function(a, b) {
-        var aDate = new Date(a.lastOpenedByMeDate);
-        var bDate = new Date(b.lastOpenedByMeDate);
-
-        if (aDate.getTime() < bDate.getTime())
-          return 1;
-        else {
-          return -1;
-        }
-      });
-
       return boards;
     }
     return false;
@@ -212,7 +201,7 @@ function Api() {
     var result = null;
 
     if (token) {
-      var url = "boards/?attachment=" + accountId + "&fields=title,id,currentUserPermission{role},lastOpenedByMeDate&limit=1000";
+      var url = "boards/?sort=LAST_OPENED&attachment=" + accountId + "&fields=title,id,currentUserPermission{role},lastOpenedByMeDate&limit=1000";
       result = this.request(context, url, "GET", null);
     }
 
