@@ -258,7 +258,7 @@ function Api() {
   }
 
   Api.prototype.uploadArtboardsToRTB = function(context, boardId, exportAll) {
-    var fullURL = path + "boards/" + boardId + "/integrations/imageplugin";
+    var fullURL = path + "boards/" + boardId + "/integrations/imageplugin?source=sketch";
     var stringURL = [NSString stringWithFormat:fullURL];
     var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     var token = this.getToken();
