@@ -272,9 +272,9 @@ function Api() {
       var artboards = [page artboards];
 
       if (artboards.length == 0) {
-        return this.UploadEnum.NO_ARTBOARDS;
+        return { result: this.UploadEnum.NO_ARTBOARDS };
       } else {
-        return this.UploadEnum.NO_ARTBOARDS_SELECTED;
+        return { result: this.UploadEnum.NO_ARTBOARDS_SELECTED };
       }
     }
 
@@ -375,12 +375,13 @@ function Api() {
       if (res != null) {
         if (res.error != nil) {
           logErr(res.error)
+          return { result: this.UploadEnum.UPLOAD_FAILED, error: res.error }
         } else {
           for (var i = 0; i < res.widgets.length; i++) {
             var artboard = exportInfoList[i];
             context.command.setValue_forKey_onLayer_forPluginIdentifier(res.widgets[i]["resourceId"], boardId, artboard.artboard, "rtb_sync");
           }
-          return this.UploadEnum.SUCCESS;
+          return { result: this.UploadEnum.SUCCESS };
         }
       } else {
         logErr('res == null')
@@ -389,7 +390,7 @@ function Api() {
       logErr('classNameOfOuput == _NSZeroData')
     }
 
-    return this.UploadEnum.UPLOAD_FAILED;
+    return { result: this.UploadEnum.UPLOAD_FAILED };
   }
 
   Api.prototype.artboardsToPNG = function(context, exportAll, scale) {

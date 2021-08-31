@@ -702,7 +702,7 @@ function UI() {
         [syncButton setCOSJSTargetFunction:undefined];
         COScript.currentCOScript().setShouldKeepAround_(false);
 
-        if (uploadResult == api.UploadEnum.SUCCESS) {
+        if (uploadResult.result == api.UploadEnum.SUCCESS) {
           api.setLastBoardId(boardId);
 
           if (openBoard.state() == 1) {
@@ -711,12 +711,16 @@ function UI() {
 
             [[NSWorkspace sharedWorkspace] openURL:url];
           }
-        } else if (uploadResult == api.UploadEnum.NO_ARTBOARDS) {
+        } else if (uploadResult.result == api.UploadEnum.NO_ARTBOARDS) {
           showAlert("No artboards on the page?", "Please create an artboard or open another file.", context);
-        } else if (uploadResult == api.UploadEnum.NO_ARTBOARDS_SELECTED) {
+        } else if (uploadResult.result == api.UploadEnum.NO_ARTBOARDS_SELECTED) {
           showAlert("No artboards selected?", "Please choose an artboard and retry.", context);
-        } else if (uploadResult == api.UploadEnum.UPLOAD_FAILED) {
-          showAlert("An error occurred", "There was an error during syncing. Please retry.", context);
+        } else if (uploadResult.result == api.UploadEnum.UPLOAD_FAILED) {
+          if (uploadResult.error && uploadResult.error.message) {
+            showAlert("An error occurred", uploadResult.error.message, context);
+          } else {
+            showAlert("An error occurred", "There was an error during syncing. Please retry.", context);
+          }
         }
       }
     }];
