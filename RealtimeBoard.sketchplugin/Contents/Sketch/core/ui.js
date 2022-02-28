@@ -449,7 +449,7 @@ function UI() {
     for (var i = 0; i < cookies.length; i++) {
       var cookie = cookies[i];
 
-      if ([cookie domain] == 'miro.com') {
+      if ([cookie domain] == 'miro.com' || [cookie domain] == '.miro.com') {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
       }
     }
@@ -507,7 +507,7 @@ function UI() {
         for (var i = 0; i < cookies.length; i++) {
           var cookie = cookies[i];
 
-          if ([cookie domain] == 'miro.com') {
+          if ([cookie domain] == 'miro.com' || [cookie domain] == '.miro.com') {
             if ([cookie name] == 'token') {
               api.setToken([cookie value]);
               break;
