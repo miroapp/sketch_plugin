@@ -257,7 +257,7 @@ function Api() {
     return false;
   }
 
-  Api.prototype.uploadOneArtboardToMiro = function uploadOneArtboardToMiro (context, boardId, exportItem) {
+  Api.prototype.uploadArtboardsToMiro = function uploadArtboardsToMiro (context, boardId, exportInfoList) {
 
     var fullURL = path + "boards/" + boardId + "/integrations/imageplugin?source=sketch";
     var stringURL = [NSString stringWithFormat:fullURL];
@@ -265,8 +265,6 @@ function Api() {
     var token = this.getToken();
     var auth = "hash " + token;
     var scale = this.getFromRetina() == 1 ? 2 : 1;
-    var exportInfoList = [];
-    exportInfoList.push(exportItem);
 
     var makeDataString = function makeDataString (transformationData, sizeData, identifier) {
       if (!transformationData) {
@@ -398,18 +396,31 @@ function Api() {
       }
     }
 
+
+    let resp = this.uploadArtboardsToMiro(context, boardId, exportInfoList);
+
+    if (resp.result === this.UploadEnum.SUCCESS) {
+      this.clearExportFolder();
+      return resp;
+    } else if (resp.result === this.UploadEnum.UPLOAD_FAILED && resp.error) {
+      this.clearExportFolder();
+      return resp;
+    }
+
     let result = {}
     
     for(let i = 0; i < exportInfoList.length; i++) {
-      const res = this.uploadOneArtboardToMiro(context, boardId, exportInfoList[exportInfoList.length - i - 1]);
+      const exportList = []
+      exportList.push(exportInfoList[exportInfoList.length - i - 1]);
+      const res = this.uploadArtboardsToMiro(context, boardId, exportList);
       if (res.result === this.UploadEnum.UPLOAD_FAILED) {
         result = { result: res.result, error: res.error || { message: 'Some of the images to be synced were too large. Try decreasing the resolution.'} }
       }
     }
-    this.clearExportFolder();
     if(!result.result) {
       result = { result: this.UploadEnum.SUCCESS }
     }
+    this.clearExportFolder();
     
     return result;
   }
