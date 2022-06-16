@@ -397,16 +397,6 @@ function Api() {
     }
 
 
-    let resp = this.uploadArtboardsToMiro(context, boardId, exportInfoList);
-
-    if (resp.result === this.UploadEnum.SUCCESS) {
-      this.clearExportFolder();
-      return resp;
-    } else if (resp.result === this.UploadEnum.UPLOAD_FAILED && resp.error) {
-      this.clearExportFolder();
-      return resp;
-    }
-
     let result = {}
     
     for(let i = 0; i < exportInfoList.length; i++) {
