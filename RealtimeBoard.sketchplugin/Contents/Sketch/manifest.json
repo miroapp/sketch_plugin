@@ -1,7 +1,7 @@
 {
   "name": "Miro",
   "identifier" : "com.realtimeboard.sketch.plugin",
-  "version" : "1.6.4",
+  "version" : "1.6.5",
   "description" : "Export and sync your artboards with Miro",
   "authorEmail" : "support@miro.com",
   "author" : "Miro",

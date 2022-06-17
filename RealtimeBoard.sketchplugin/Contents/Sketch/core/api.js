@@ -257,31 +257,16 @@ function Api() {
     return false;
   }
 
-  Api.prototype.uploadArtboardsToRTB = function(context, boardId, exportAll) {
+  Api.prototype.uploadArtboardsToMiro = function uploadArtboardsToMiro (context, boardId, exportInfoList) {
+
     var fullURL = path + "boards/" + boardId + "/integrations/imageplugin?source=sketch";
     var stringURL = [NSString stringWithFormat:fullURL];
     var webStringURL = [stringURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     var token = this.getToken();
     var auth = "hash " + token;
     var scale = this.getFromRetina() == 1 ? 2 : 1;
-    var exportInfoList = this.artboardsToPNG(context, exportAll, scale);
 
-    if (exportInfoList.length == 0) {
-      var document = context.document;
-      var page = [document currentPage];
-      var artboards = [page artboards];
-
-      if (artboards.length == 0) {
-        return { result: this.UploadEnum.NO_ARTBOARDS };
-      } else {
-        return { result: this.UploadEnum.NO_ARTBOARDS_SELECTED };
-      }
-    }
-
-    var task = [[NSTask alloc] init];
-    [task setLaunchPath:"/usr/bin/curl"];
-
-    var makeDataString = function(transformationData, sizeData, identifier) {
+    var makeDataString = function makeDataString (transformationData, sizeData, identifier) {
       if (!transformationData) {
         transformationData = '';
       }
@@ -351,11 +336,14 @@ function Api() {
     args.addObject(graphicsPluginRequest);
 
     for (var i = 0; i < exportInfoList.length; i++) {
+      logErr(JSON.stringify(exportInfoList[i]));
       args.addObject("-F");
       args.addObject("ArtboardName1=@" + exportInfoList[i]["path"]);
     }
 
     args.addObject(fullURL);
+    var task = [[NSTask alloc] init];
+    [task setLaunchPath:"/usr/bin/curl"];
 
     [task setArguments:args];
 
@@ -366,7 +354,6 @@ function Api() {
 
     var outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
 
-    this.clearExportFolder();
 
     var classNameOfOuput = NSStringFromClass([outputData class]);
 
@@ -387,10 +374,55 @@ function Api() {
         logErr('res == null')
       }
     } else {
-      logErr('classNameOfOuput == _NSZeroData')
+      logErr('classNameOfOutput == _NSZeroData')
     }
 
     return { result: this.UploadEnum.UPLOAD_FAILED };
+  }
+
+  Api.prototype.uploadArtboardsToRTB = function uploadArtboardsToRTB (context, boardId, exportAll) {
+    var scale = this.getFromRetina() == 1 ? 2 : 1;
+    var exportInfoList = this.artboardsToPNG(context, exportAll, scale);
+
+    if (exportInfoList.length == 0) {
+      var document = context.document;
+      var page = [document currentPage];
+      var artboards = [page artboards];
+
+      if (artboards.length == 0) {
+        return { result: this.UploadEnum.NO_ARTBOARDS };
+      } else {
+        return { result: this.UploadEnum.NO_ARTBOARDS_SELECTED };
+      }
+    }
+
+
+    let resp = this.uploadArtboardsToMiro(context, boardId, exportInfoList);
+
+    if (resp.result === this.UploadEnum.SUCCESS) {
+      this.clearExportFolder();
+      return resp;
+    } else if (resp.result === this.UploadEnum.UPLOAD_FAILED && resp.error) {
+      this.clearExportFolder();
+      return resp;
+    }
+
+    let result = {}
+    
+    for(let i = 0; i < exportInfoList.length; i++) {
+      const exportList = []
+      exportList.push(exportInfoList[exportInfoList.length - i - 1]);
+      const res = this.uploadArtboardsToMiro(context, boardId, exportList);
+      if (res.result === this.UploadEnum.UPLOAD_FAILED) {
+        result = { result: res.result, error: res.error || { message: 'Some of the images to be synced were too large. Try decreasing the resolution.'} }
+      }
+    }
+    if(!result.result) {
+      result = { result: this.UploadEnum.SUCCESS }
+    }
+    this.clearExportFolder();
+    
+    return result;
   }
 
   Api.prototype.artboardsToPNG = function(context, exportAll, scale) {
