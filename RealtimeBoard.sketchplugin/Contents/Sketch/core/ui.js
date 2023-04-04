@@ -350,14 +350,15 @@ function UI() {
       var email = emailField.stringValue();
       var response = api.SSOAuth(context, email);
 
-      if (response) {
-        if (!response.enabled) {
+      var ssoOrgResp = response.samlOrganizations.length > 0 && response.samlOrganizations[0]
+      if (ssoOrgResp) {
+        if (!ssoOrgResp.enabled) {
           showAlert("Sorry, you cannot authorize using SSO", "", context);
-        } else if (!response.redirectUrl) {
+        } else if (!ssoOrgResp.redirectUrl) {
           showAlert("Sorry, you cannot authorize using SSO", "Your company's Identity Provider settings don't allow you to authorize with SSO from the plugin", context);
         } else {
           endSheet();
-          _this.showWebView(context, response.redirectUrl);
+          _this.showWebView(context, ssoOrgResp.redirectUrl);
         }
 
       }
