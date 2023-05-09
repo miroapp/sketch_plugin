@@ -284,11 +284,14 @@ function Api() {
       var resourceId = context.command.valueForKey_onLayer_forPluginIdentifier(boardId, artboard, "rtb_sync");
       var originalId = context.command.valueForKey_onLayer_forPluginIdentifier("originalId", artboard, "rtb_sync");
       var objectId = [artboard objectID];
-      var absoluteInfluenceRect = [artboard absoluteInfluenceRect];
-      var xPos = absoluteInfluenceRect.origin.x;
-      var yPos = absoluteInfluenceRect.origin.y;
-      var width = absoluteInfluenceRect.size.width;
-      var height = absoluteInfluenceRect.size.height;
+      
+      const document = [artboard documentData];
+      const immutable = [artboard immutableModelObject];
+      const relativeInfluenceRect = immutable.influenceRectForBoundsInDocument(document);
+      var xPos = relativeInfluenceRect.origin.x;
+      var yPos = relativeInfluenceRect.origin.y;
+      var width = relativeInfluenceRect.size.width;
+      var height = relativeInfluenceRect.size.height;
       var centralXPos = width / 2 + xPos;
       var centralYPos = height / 2 + yPos;
       var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
