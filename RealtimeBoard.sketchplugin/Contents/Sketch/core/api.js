@@ -284,14 +284,19 @@ function Api() {
       var resourceId = context.command.valueForKey_onLayer_forPluginIdentifier(boardId, artboard, "rtb_sync");
       var originalId = context.command.valueForKey_onLayer_forPluginIdentifier("originalId", artboard, "rtb_sync");
       var objectId = [artboard objectID];
+
       
       const document = [artboard documentData];
       const immutable = [artboard immutableModelObject];
-      const relativeInfluenceRect = immutable.influenceRectForBoundsInDocument(document);
-      var xPos = relativeInfluenceRect.origin.x;
-      var yPos = relativeInfluenceRect.origin.y;
-      var width = relativeInfluenceRect.size.width;
-      var height = relativeInfluenceRect.size.height;
+
+      var relativeInfluenceRect = immutable.influenceRectForBoundsInDocument(document);
+      const layer = artboard.convertRect_toLayer_(relativeInfluenceRect, /* to absolute/page coordinates */null)
+      var xPos = layer.origin.x;
+      var yPos = layer.origin.y;
+      var width = layer.size.width;
+      var height = layer.size.height;
+
+
       var centralXPos = width / 2 + xPos;
       var centralYPos = height / 2 + yPos;
       var transformationData = '\\"positionData\\":{\\"x\\": ' + centralXPos + ', \\"y\\":' + centralYPos + ' }';
@@ -359,6 +364,7 @@ function Api() {
 
 
     var classNameOfOuput = NSStringFromClass([outputData class]);
+ 
 
     if (classNameOfOuput != "_NSZeroData") {
       var res = [NSJSONSerialization JSONObjectWithData:outputData options:NSJSONReadingMutableLeaves error:nil]
