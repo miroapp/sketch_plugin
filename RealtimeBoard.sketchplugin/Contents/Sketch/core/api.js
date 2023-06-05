@@ -180,7 +180,6 @@ function Api() {
     var url = "sso/saml/info?email=" + email;
 
     result = this.request(context, url, "GET");
-    logErr("result", result.enabled)
 
     return result;
   }

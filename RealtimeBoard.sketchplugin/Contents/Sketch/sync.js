@@ -27,11 +27,9 @@ SOFTWARE.
 
 function sync(context, syncSelected) {
   var token = api.getToken();
-  logErr("token", token)
 
   if (token) {
     var response = api.authCheckRequest(context);
-    logErr("resp", response)
 
     if (response) {
       if (response.success == 1) {
