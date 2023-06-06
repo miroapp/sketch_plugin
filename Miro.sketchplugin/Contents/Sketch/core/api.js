@@ -285,12 +285,14 @@ function Api() {
       var originalId = context.command.valueForKey_onLayer_forPluginIdentifier("originalId", artboard, "rtb_sync");
       var objectId = [artboard objectID];
 
+      var layer 
+      if (artboard.respondsToSelector_(NSSelectorFromString("absoluteInfluenceRect"))) {
+        // Sketch < 96
+        layer = artboard.absoluteInfluenceRect();
+      } else {
+        layer = artboard.rect()
+      }
       
-      const document = [artboard documentData];
-      const immutable = [artboard immutableModelObject];
-
-      var relativeInfluenceRect = immutable.influenceRectForBoundsInDocument(document);
-      const layer = artboard.convertRect_toLayer_(relativeInfluenceRect, /* to absolute/page coordinates */null)
       var xPos = layer.origin.x;
       var yPos = layer.origin.y;
       var width = layer.size.width;

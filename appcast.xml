@@ -2,6 +2,24 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
     <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.7.0/Miro.sketchplugin.zip" sparkle:version="1.7.0"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.7/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.7"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.6/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.6"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.5/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.5"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.4/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.4"/>
+    </item>
+    <item>
+      <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.3/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.3"/>
+    </item>
+    <item>
       <enclosure url="https://github.com/miroapp/sketch_plugin/releases/download/1.6.2/RealtimeBoard.sketchplugin.zip" sparkle:version="1.6.2"/>
     </item>
     <item>
