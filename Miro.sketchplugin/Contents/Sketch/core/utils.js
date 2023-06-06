@@ -37,7 +37,7 @@ var ErrorMessages = {
   userDeleted: 'Your account is currently being deleted.',
   userDeletedDesc: 'Until then, you cannot log in or create an account with this email.',
   userLockout: 'Your account is locked due to multiple failed login attempts for 60 minutes. To unlock your account please wait or visit https://realtimeboard.com/email-unlock/',
-  contactUs: 'Please contact our support team at support@realtimeboard.com for further assistance.',
+  contactUs: 'Please contact our support team at support@miro.com for further assistance.',
   passwordIncorrect: 'The username or password you entered is incorrect.',
   defaultLockout: 'Your account is locked.'
 };
