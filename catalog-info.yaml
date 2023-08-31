@@ -1,0 +1,23 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+
+metadata:
+  name: sketch
+  title: Sketch Integration
+  description: Plugin for the designer tool Sketch
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  tags: []
+  links: []
+
+spec:
+  type: application
+  owner: ux-research-design
+  criticality: low
+  lifecycle: production
+  operations:
+    region: both
+    support: full
+  capability: adobe-cc
+
