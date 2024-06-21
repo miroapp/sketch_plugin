@@ -310,8 +310,7 @@ function Api() {
       var sizeData = '\\"width\\": ' + width + ', \\"height\\":' + height;
 
       if (resourceId != nil && (originalId == nil || [objectId isEqualToString:originalId])) {
-        // dataArray.push(makeDataString(transformationData, sizeData, resourceId));
-        dataArray.push(makeDataString(transformationData, sizeData)); // v1 api doesnt let us delete/switch images anymore
+        dataArray.push(makeDataString(transformationData, sizeData, resourceId));
       } else {
         dataArray.push(makeDataString(transformationData, sizeData));
       }
